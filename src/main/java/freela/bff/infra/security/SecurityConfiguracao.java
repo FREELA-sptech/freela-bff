@@ -1,6 +1,12 @@
 package freela.bff.infra.security;
 
 
+import freela.bff.infra.security.jwt.JwtAuthorizationFilter;
+import freela.bff.infra.security.jwt.JwtConfiguration;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.client.RestTemplate;
@@ -35,15 +42,15 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/webjars/**"),
             new AntPathRequestMatcher("/v3/api-docs/**"),
             new AntPathRequestMatcher("/actuator/*"),
-            new AntPathRequestMatcher("/user"),
-            new AntPathRequestMatcher("/user/**"),
+            new AntPathRequestMatcher("/user/login"),
             new AntPathRequestMatcher("/h2-console/**"),
             new AntPathRequestMatcher("/error/**")
     };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.headers()
+        http
+                .headers()
                 .frameOptions().disable()
                 .and()
                 .cors()
@@ -51,6 +58,7 @@ public class SecurityConfiguracao {
                 .and()
                 .csrf()
                 .disable()
+                .addFilterBefore(jwtAuthenticationFilterBean(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(URLS_PERMITIDAS)
                         .permitAll()
                         .anyRequest()
@@ -65,6 +73,16 @@ public class SecurityConfiguracao {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JwtConfiguration jwtAuthenticationUtilBean() {
+        return new JwtConfiguration();
+    }
+
+    @Bean
+    public JwtAuthorizationFilter jwtAuthenticationFilterBean() {
+        return new JwtAuthorizationFilter(jwtAuthenticationUtilBean());
     }
 
     private CorsConfiguration buildCorsConfiguration() {

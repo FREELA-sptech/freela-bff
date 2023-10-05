@@ -1,5 +1,6 @@
 package freela.bff.infra.repository;
 
+import freela.bff.domain.model.request.user.LoginRequest;
 import freela.bff.domain.model.request.user.RegisterRequest;
 import freela.bff.infra.repository.interfaces.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,17 @@ public class UserRepository implements IUserRepository {
                 .toUriString();
 
         ResponseEntity<User> responseEntity = restTemplate.postForEntity(apiUrl, registerRequest,  User.class);
+        return responseEntity.getBody();
+    }
+
+    @Override
+    public User authenticate(LoginRequest loginRequest) {
+        String endpoint = "/user/login";
+        String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
+                .path(endpoint)
+                .toUriString();
+
+        ResponseEntity<User> responseEntity = restTemplate.postForEntity(apiUrl, loginRequest,  User.class);
         return responseEntity.getBody();
     }
 }

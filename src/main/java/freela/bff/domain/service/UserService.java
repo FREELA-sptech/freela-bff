@@ -1,5 +1,6 @@
 package freela.bff.domain.service;
 
+import freela.bff.domain.model.request.user.LoginRequest;
 import freela.bff.domain.model.request.user.RegisterRequest;
 import freela.bff.domain.model.response.user.User;
 import freela.bff.domain.service.interfaces.IUserService;
@@ -14,7 +15,15 @@ public class UserService implements IUserService {
         this.userRepository = userRepository;
     }
     @Override
-    public User register(RegisterRequest registerRequest) {
-        return userRepository.register(registerRequest);
+    public Integer register(RegisterRequest registerRequest) {
+        User user = userRepository.register(registerRequest);
+
+        return user.getId();
+    }
+
+    @Override
+    public User authenticate(LoginRequest loginRequest) {
+        User user = userRepository.authenticate(loginRequest);
+        return user;
     }
 }
