@@ -1,12 +1,8 @@
-package freela.bff.infra.security;
+package freela.bff.infra.configuration;
 
 
-import freela.bff.infra.security.jwt.JwtAuthorizationFilter;
-import freela.bff.infra.security.jwt.JwtConfiguration;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import freela.bff.infra.configuration.jwt.JwtAuthorizationFilter;
+import freela.bff.infra.configuration.jwt.JwtConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +23,7 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguracao {
+public class ApiConfiguration {
     private static final String ORIGENS_PERMITIDAS = "*";
 
     public static final AntPathRequestMatcher[] URLS_PERMITIDAS = {
@@ -42,9 +38,9 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/webjars/**"),
             new AntPathRequestMatcher("/v3/api-docs/**"),
             new AntPathRequestMatcher("/actuator/*"),
-            new AntPathRequestMatcher("/user/login"),
             new AntPathRequestMatcher("/h2-console/**"),
-            new AntPathRequestMatcher("/error/**")
+            new AntPathRequestMatcher("/users/authenticate"),
+            new AntPathRequestMatcher("/users", "POST")
     };
 
     @Bean

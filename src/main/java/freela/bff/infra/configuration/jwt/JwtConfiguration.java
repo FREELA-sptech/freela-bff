@@ -1,10 +1,11 @@
-package freela.bff.infra.security.jwt;
+package freela.bff.infra.configuration.jwt;
 
 import freela.bff.domain.model.response.user.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -27,6 +28,20 @@ public class JwtConfiguration {
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .setExpiration(new Date(System.currentTimeMillis() + jwtTokenValidity * 1_000))
                 .compact();
+    }
+
+    public UserClaims getClaimsUser(Authentication authentication) {
+        String token = (String) authentication.getDetails();
+
+        Claims claims = Jwts.parser()
+                .setSigningKey(secret)
+                .parseClaimsJws(token)
+                .getBody();
+
+        String email = claims.getSubject();
+        Integer userId = (Integer) claims.get("userId");
+
+        return new UserClaims(email, userId);
     }
 
     public boolean validateToken(String token) {

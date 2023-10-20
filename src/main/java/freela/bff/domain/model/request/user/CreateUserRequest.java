@@ -15,7 +15,7 @@ import java.util.ArrayList;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+public class CreateUserRequest {
     @Size(min = 2, max = 50)
     private String name;
     @Email
