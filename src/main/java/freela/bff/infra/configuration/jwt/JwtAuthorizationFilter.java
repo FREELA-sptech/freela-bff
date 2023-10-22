@@ -31,6 +31,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             if (token != null && jwtConfiguration.validateToken(token)) {
                 Authentication authentication = buildAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                JwtTokenStorage.setToken(token);
             }
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

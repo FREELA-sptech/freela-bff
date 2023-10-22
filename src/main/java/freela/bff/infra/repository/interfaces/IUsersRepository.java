@@ -11,4 +11,5 @@ public interface IUsersRepository {
     User createUser(CreateUserRequest createUserRequest);
     User authenticateUser(AuthenticateUserRequest authenticateUserRequest);
     User updateProfilePhotoUser(Integer idUser, MultipartFile image);
+    User getDetailsUser(Integer idUser);
 }

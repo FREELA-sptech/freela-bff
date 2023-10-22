@@ -41,9 +41,13 @@ public class UsersService implements IUsersService {
 
     @Override
     public User updateProfilePhotoUser(Authentication authentication, MultipartFile image) {
-        UserClaims userClaims = jwtConfiguration.getClaimsUser(authentication);
 
-        return usersRepository.updateProfilePhotoUser(userClaims.getUserId(), image);
+        return usersRepository.updateProfilePhotoUser(1, image);
+    }
+
+    @Override
+    public User getDetailsUser(UserClaims userClaims) {
+        return usersRepository.getDetailsUser(userClaims.getUserId());
     }
 
 

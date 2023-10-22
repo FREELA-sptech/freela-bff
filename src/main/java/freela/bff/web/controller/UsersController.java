@@ -17,16 +17,18 @@ import org.springframework.web.bind.annotation.*;
 import freela.bff.domain.model.response.user.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 
 @RestController
 @RequestMapping("/users")
-public class UsersController {
+public class UsersController extends BaseController {
     private final IUsersService usersService;
 
-    public UsersController(IUsersService usersService) {
+    public UsersController(JwtConfiguration jwtConfiguration, IUsersService usersService) {
+        super(jwtConfiguration);
         this.usersService = usersService;
     }
 
@@ -42,6 +44,19 @@ public class UsersController {
             @RequestBody @Valid CreateUserRequest request) {
         var response = usersService.createUser(request);
         return ResponseEntity.created(URI.create("/user/" + response)).body(response);
+    }
+
+    @Operation(summary = "Buscar detalhes do usuário")
+    @ApiResponse(responseCode = "200", description = "Sucesso - Dados do usuário",
+            content = @Content(schema = @Schema(implementation = CreateUserResponse.class)))
+    @ApiResponse(responseCode = "400", description = "BadRequest - Parâmetros incorretos ou insuficientes",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    @ApiResponse(responseCode = "401", description = "Unauthorized - Token invalido ou expirado",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    @GetMapping
+    public ResponseEntity<User> getDetailsUser() {
+        var response = usersService.getDetailsUser(this.getUserClaims());
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Realizar a autenticação de um usuário no sistema")

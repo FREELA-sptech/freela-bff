@@ -16,4 +16,5 @@ public interface IUsersService {
     CreateUserResponse createUser(CreateUserRequest createUserRequest);
     AuthenticateUserResponse authenticateUser(AuthenticateUserRequest authenticateUserRequest);
     User updateProfilePhotoUser(Authentication authentication, MultipartFile image);
+    User getDetailsUser(UserClaims userClaims);
 }

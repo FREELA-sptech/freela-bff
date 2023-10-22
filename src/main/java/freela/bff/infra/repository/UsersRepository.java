@@ -52,4 +52,15 @@ public class UsersRepository implements IUsersRepository {
         ResponseEntity<User> responseEntity = restTemplate.postForEntity(apiUrl, image,  User.class);
         return responseEntity.getBody();
     }
+
+    @Override
+    public User getDetailsUser(Integer idUser) {
+        String endpoint = String.format("/user/%s", idUser);
+        String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
+                .path(endpoint)
+                .toUriString();
+
+        ResponseEntity<User> responseEntity = restTemplate.getForEntity(apiUrl, User.class);
+        return responseEntity.getBody();
+    }
 }

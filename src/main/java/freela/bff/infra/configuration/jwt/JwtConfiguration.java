@@ -5,13 +5,17 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Component
 public class JwtConfiguration {
+
     @Getter
     @Value("${jwt.secret}")
     private String secret;
@@ -20,26 +24,30 @@ public class JwtConfiguration {
     private long jwtTokenValidity;
 
     public String generateJwtToken(User user) {
-        Claims claims = Jwts.claims().setSubject(user.getEmail());
+        Claims claims = Jwts.claims();
+        claims.setSubject(user.getEmail());
         claims.put("userId", user.getId());
 
-        return Jwts.builder()
+        Date expirationDate = new Date(System.currentTimeMillis() + jwtTokenValidity * 1000);
+
+        String jwtToken = Jwts.builder()
                 .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .signWith(SignatureAlgorithm.HS256, secret)
-                .setExpiration(new Date(System.currentTimeMillis() + jwtTokenValidity * 1_000))
+                .setExpiration(expirationDate)
                 .compact();
+
+        return jwtToken;
     }
 
-    public UserClaims getClaimsUser(Authentication authentication) {
-        String token = (String) authentication.getDetails();
 
+    public UserClaims getClaimsFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(token)
                 .getBody();
-
         String email = claims.getSubject();
-        Integer userId = (Integer) claims.get("userId");
+        Integer userId = claims.get("userId", Integer.class);
 
         return new UserClaims(email, userId);
     }
@@ -53,4 +61,3 @@ public class JwtConfiguration {
         }
     }
 }
-
