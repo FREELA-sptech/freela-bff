@@ -2,49 +2,59 @@ package freela.bff.infra.repository;
 
 import freela.bff.domain.model.request.order.CreateOrderRequest;
 import freela.bff.domain.model.response.order.Order;
-import freela.bff.domain.model.response.user.User;
 import freela.bff.infra.repository.interfaces.IOrderRepository;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.google.gson.Gson;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
 @Repository
-public class OrderRepository implements IOrderRepository {
+public class OrderRepository extends BaseRepository implements IOrderRepository {
 
-    private final String baseURL = "http://freela-order-service.duckdns.org";
+    private final String baseURL = "http://localhost:8082";
 
-    @Autowired
-    private RestTemplate restTemplate;
-
-    public ResponseEntity<Order> createOrder(CreateOrderRequest request){
+    public Order createOrder(CreateOrderRequest request){
         String endpoint = "/order";
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
                 .path(endpoint)
                 .toUriString();
 
-        ResponseEntity<Order> responseEntity = restTemplate.postForEntity(apiUrl, request,  Order.class);
-        return responseEntity;
+        HttpPost post = new HttpPost(apiUrl);
+
+        return this.sendPost(this.generateBody(post,request.toString()),Order.class);
     }
 
-    public ResponseEntity<Order[]> getAll(List<Integer> subCategoriesIds, String orderType){
-        String endpoint = "/order";
+    public Order[] getAll(List<Integer> subCategoriesIds, String orderType){
+        String endpoint = "/order?subCategoriesIds=1";
+
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
                 .path(endpoint)
                 .toUriString();
-        ResponseEntity<Order[]> responseEntity = restTemplate.getForEntity(apiUrl, Order[].class,subCategoriesIds,orderType);
-        return  responseEntity;
+
+        HttpGet get = new HttpGet(apiUrl);
+
+        return this.sendGet(get,Order[].class);
     }
 
-    public ResponseEntity<Order> getById(Integer orderId){
+    public Order getById(Integer orderId){
         String endpoint = "/order/" + orderId;
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
                 .path(endpoint)
                 .toUriString();
+        HttpGet get = new HttpGet(apiUrl);
 
-        return restTemplate.getForEntity(apiUrl, Order.class);
+        return this.sendGet(get,Order.class);
     }
 }

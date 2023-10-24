@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 @Repository
 public class UsersRepository implements IUsersRepository {
-    private final String baseURL = "http://freela-user-service.duckdns.org";
+    private final String baseURL = "http://localhost:8081";
 
     @Autowired
     private RestTemplate restTemplate;
@@ -82,7 +82,7 @@ public class UsersRepository implements IUsersRepository {
 
     @Override
     public User[] getFreelancers(Integer idUser) {
-        String endpoint = String.format("/user/%s", idUser);
+        String endpoint = String.format("/user/subcategoryid/%s", idUser);
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
                 .path(endpoint)
                 .toUriString();

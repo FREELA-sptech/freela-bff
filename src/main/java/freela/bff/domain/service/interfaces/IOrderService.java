@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface IOrderService {
-    ResponseEntity<Order> createOrder(CreateOrderRequest request);
-    ResponseEntity<Order[]> getAll(List<Integer> subCategoriesIds, String orderType);
-    ResponseEntity<Order> getById(Integer orderId);
+    Order createOrder(CreateOrderRequest request);
+    Order[] getAll(List<Integer> subCategoriesIds, String orderType);
+    Order getById(Integer orderId);
 }

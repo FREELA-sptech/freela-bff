@@ -16,15 +16,15 @@ public class OrderService implements IOrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public ResponseEntity<Order> createOrder(CreateOrderRequest request){
+    public Order createOrder(CreateOrderRequest request){
         return orderRepository.createOrder(request);
     }
 
-    public ResponseEntity<Order[]> getAll(List<Integer> subCategoriesIds, String orderType){
+    public Order[] getAll(List<Integer> subCategoriesIds, String orderType){
         return orderRepository.getAll(subCategoriesIds, orderType);
     }
 
-    public ResponseEntity<Order> getById(Integer orderId){
+    public Order getById(Integer orderId){
         return orderRepository.getById(orderId);
     }
 }

@@ -35,7 +35,7 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<Order> createOrder(
             @RequestBody @Valid CreateOrderRequest request) {
-        return orderService.createOrder(request);
+        return ResponseEntity.ok(orderService.createOrder(request));
     }
 
     @Operation(summary = "Listar pedidos")
@@ -44,7 +44,8 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<Order[]> getAll(
             @RequestParam(required = true, name = "subCategoriesIds") List<Integer> subCategoriesIds, @RequestParam(required = false, name = "orderType") String orderType) {
-        return orderService.getAll(subCategoriesIds,orderType);
+        return ResponseEntity.ok(orderService.getAll(subCategoriesIds,orderType));
+
     }
 
     @ApiResponses({
@@ -54,6 +55,6 @@ public class OrderController {
     })
     @GetMapping("{orderId}")
     public ResponseEntity<Order> getById(@PathVariable Integer orderId) {
-        return orderService.getById(orderId);
+        return ResponseEntity.ok(orderService.getById(orderId));
     }
 }

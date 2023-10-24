@@ -33,7 +33,7 @@ public class ProposalController {
             @PathVariable @NotNull int userId,
             @RequestBody CreateProposalRequest request
     ){
-        return proposalService.create(userId,request,orderId);
+        return ResponseEntity.ok(proposalService.create(userId,request,orderId));
     }
 
     @ApiResponses({
@@ -43,11 +43,11 @@ public class ProposalController {
     })
     @GetMapping("/user/{userId}")
     public ResponseEntity<Proposal[]> findProposalsByUserid(@PathVariable Integer userId) {
-        return proposalService.findProposalsByUserId(userId);
+        return ResponseEntity.ok(proposalService.findProposalsByUserId(userId));
     }
 
     @GetMapping("/order/{orderId}")
     public ResponseEntity<Proposal> findProposalsByOrder(@PathVariable Integer orderId){
-        return proposalService.findProposalsByOrder(orderId);
+        return ResponseEntity.ok(proposalService.findProposalsByOrder(orderId));
     }
 }
