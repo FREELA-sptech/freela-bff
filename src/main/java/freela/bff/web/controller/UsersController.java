@@ -30,7 +30,7 @@ public class UsersController extends BaseController {
 
     public UsersController(JwtConfiguration jwtConfiguration, IUsersService usersService) {
         super(jwtConfiguration);
-        this.usersService = usersService;
+            this.usersService = usersService;
     }
 
     @Operation(summary = "Cadastrar um novo usuário no sistema")
