@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 @Repository
 public class OrderRepository implements IOrderRepository {
 
@@ -26,5 +28,23 @@ public class OrderRepository implements IOrderRepository {
 
         ResponseEntity<Order> responseEntity = restTemplate.postForEntity(apiUrl, request,  Order.class);
         return responseEntity;
+    }
+
+    public ResponseEntity<Order[]> getAll(List<Integer> subCategoriesIds, String orderType){
+        String endpoint = "/order";
+        String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
+                .path(endpoint)
+                .toUriString();
+        ResponseEntity<Order[]> responseEntity = restTemplate.getForEntity(apiUrl, Order[].class,subCategoriesIds,orderType);
+        return  responseEntity;
+    }
+
+    public ResponseEntity<Order> getById(Integer orderId){
+        String endpoint = "/order/" + orderId;
+        String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
+                .path(endpoint)
+                .toUriString();
+
+        return restTemplate.getForEntity(apiUrl, Order.class);
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OrderService implements IOrderService {
 
@@ -16,5 +18,13 @@ public class OrderService implements IOrderService {
 
     public ResponseEntity<Order> createOrder(CreateOrderRequest request){
         return orderRepository.createOrder(request);
+    }
+
+    public ResponseEntity<Order[]> getAll(List<Integer> subCategoriesIds, String orderType){
+        return orderRepository.getAll(subCategoriesIds, orderType);
+    }
+
+    public ResponseEntity<Order> getById(Integer orderId){
+        return orderRepository.getById(orderId);
     }
 }
