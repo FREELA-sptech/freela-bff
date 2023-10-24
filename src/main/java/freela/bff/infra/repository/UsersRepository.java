@@ -2,8 +2,11 @@ package freela.bff.infra.repository;
 
 import freela.bff.domain.model.request.user.AuthenticateUserRequest;
 import freela.bff.domain.model.request.user.CreateUserRequest;
+import freela.bff.domain.model.request.user.UpdateUserRequest;
 import freela.bff.infra.repository.interfaces.IUsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
@@ -12,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import freela.bff.domain.model.response.user.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 @Repository
 public class UsersRepository implements IUsersRepository {
@@ -54,6 +58,18 @@ public class UsersRepository implements IUsersRepository {
     }
 
     @Override
+    public User updateUser(Integer idUser, UpdateUserRequest request) {
+        String endpoint = String.format("/user/%s", idUser);
+        String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
+                .path(endpoint)
+                .toUriString();
+
+
+        User responseEntity = restTemplate.patchForObject(apiUrl, request, User.class);
+        return responseEntity;
+    }
+
+    @Override
     public User getDetailsUser(Integer idUser) {
         String endpoint = String.format("/user/%s", idUser);
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
@@ -61,6 +77,19 @@ public class UsersRepository implements IUsersRepository {
                 .toUriString();
 
         ResponseEntity<User> responseEntity = restTemplate.getForEntity(apiUrl, User.class);
+        return responseEntity.getBody();
+    }
+
+    @Override
+    public User[] getFreelancers(Integer idUser) {
+        String endpoint = String.format("/user/%s", idUser);
+        String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
+                .path(endpoint)
+                .toUriString();
+
+        ParameterizedTypeReference<ArrayList<User>> typeRef = new ParameterizedTypeReference<ArrayList<User>>(){};
+
+        ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(apiUrl, User[].class);
         return responseEntity.getBody();
     }
 }

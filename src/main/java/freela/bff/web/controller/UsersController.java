@@ -2,6 +2,7 @@ package freela.bff.web.controller;
 
 import freela.bff.domain.model.request.user.AuthenticateUserRequest;
 import freela.bff.domain.model.request.user.CreateUserRequest;
+import freela.bff.domain.model.request.user.UpdateUserRequest;
 import freela.bff.domain.model.response.core.ErrorResponse;
 import freela.bff.domain.model.response.user.AuthenticateUserResponse;
 import freela.bff.domain.model.response.user.CreateUserResponse;
@@ -59,6 +60,20 @@ public class UsersController extends BaseController {
         return ResponseEntity.ok(response);
     }
 
+
+    @Operation(summary = "Buscar freelancers")
+    @ApiResponse(responseCode = "200", description = "",
+            content = @Content(schema = @Schema(implementation = CreateUserResponse.class)))
+    @ApiResponse(responseCode = "400", description = "BadRequest - Parâmetros incorretos ou insuficientes",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    @ApiResponse(responseCode = "401", description = "Unauthorized - Token invalido ou expirado",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    @GetMapping("/freelancers")
+    public ResponseEntity<User[]> getFreelancers() {
+        var response = usersService.getFreelancers(this.getUserClaims());
+        return ResponseEntity.ok(response);
+    }
+
     @Operation(summary = "Realizar a autenticação de um usuário no sistema")
     @ApiResponse(responseCode = "200", description = "Sucesso - Usuário autenticado",
             content = @Content(schema = @Schema(implementation = AuthenticateUserResponse.class)))
@@ -82,4 +97,15 @@ public class UsersController extends BaseController {
             Authentication authentication, @RequestParam("image") MultipartFile image) {
         return ResponseEntity.ok(usersService.updateProfilePhotoUser(authentication, image));
     }
+
+    @Operation(summary = "Atualizar perfil do usuario")
+    @ApiResponse(responseCode = "200", description = "Perfil atualizado",
+            content = @Content(schema = @Schema(implementation = AuthenticateUserResponse.class)))
+    @ApiResponse(responseCode = "401", description = "Unauthorized - Token invalido ou expirado",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    @PutMapping()
+    public ResponseEntity<User> updateUser(@RequestBody UpdateUserRequest request) {
+        return ResponseEntity.ok(usersService.updateUser(this.getUserClaims(), request));
+    }
+
 }
