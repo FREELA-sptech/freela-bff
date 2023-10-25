@@ -23,7 +23,7 @@ import java.util.List;
 @Repository
 public class OrderRepository extends BaseRepository implements IOrderRepository {
 
-    private final String baseURL = "http://localhost:8082";
+    private final String baseURL = "http://freela-order-service.duckdns.org/";
 
     public Order createOrder(CreateOrderRequest request){
         String endpoint = "/order";
