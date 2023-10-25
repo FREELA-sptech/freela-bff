@@ -14,7 +14,7 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private byte[] photo;
+    private String photo;
     private String description;
     private String uf;
     private String city;

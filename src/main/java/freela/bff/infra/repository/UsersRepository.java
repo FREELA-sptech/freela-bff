@@ -3,7 +3,14 @@ package freela.bff.infra.repository;
 import freela.bff.domain.model.request.user.AuthenticateUserRequest;
 import freela.bff.domain.model.request.user.CreateUserRequest;
 import freela.bff.domain.model.request.user.UpdateUserRequest;
+import freela.bff.domain.model.response.order.Order;
 import freela.bff.infra.repository.interfaces.IUsersRepository;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -15,10 +22,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 import freela.bff.domain.model.response.user.User;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Repository
-public class UsersRepository implements IUsersRepository {
+public class UsersRepository extends BaseRepository implements IUsersRepository {
     private final String baseURL = "http://freela-user-service.duckdns.org";
 
     @Autowired
@@ -31,8 +40,9 @@ public class UsersRepository implements IUsersRepository {
                 .path(endpoint)
                 .toUriString();
 
-        ResponseEntity<User> responseEntity = restTemplate.postForEntity(apiUrl, createUserRequest,  User.class);
-        return responseEntity.getBody();
+        HttpPost post = new HttpPost(apiUrl);
+
+        return this.sendPost(this.generateBody(post, createUserRequest), User.class);
     }
 
     @Override
@@ -42,8 +52,11 @@ public class UsersRepository implements IUsersRepository {
                 .path(endpoint)
                 .toUriString();
 
-        ResponseEntity<User> responseEntity = restTemplate.postForEntity(apiUrl, authenticateUserRequest,  User.class);
-        return responseEntity.getBody();
+        HttpPost post = new HttpPost(apiUrl);
+
+        User response = this.sendPost(this.generateBody(post, authenticateUserRequest), User.class);
+
+        return response;
     }
 
     @Override
@@ -53,8 +66,9 @@ public class UsersRepository implements IUsersRepository {
                 .path(endpoint)
                 .toUriString();
 
-        ResponseEntity<User> responseEntity = restTemplate.postForEntity(apiUrl, image,  User.class);
-        return responseEntity.getBody();
+        HttpPost post = new HttpPost(apiUrl);
+
+        return this.sendPost(this.generateBody(post, image.toString()), User.class);
     }
 
     @Override
@@ -65,8 +79,9 @@ public class UsersRepository implements IUsersRepository {
                 .toUriString();
 
 
-        User responseEntity = restTemplate.patchForObject(apiUrl, request, User.class);
-        return responseEntity;
+        HttpPatch patch = new HttpPatch(apiUrl);
+
+        return this.sendPatch(this.generateBody(patch, request), User.class);
     }
 
     @Override
@@ -76,20 +91,20 @@ public class UsersRepository implements IUsersRepository {
                 .path(endpoint)
                 .toUriString();
 
-        ResponseEntity<User> responseEntity = restTemplate.getForEntity(apiUrl, User.class);
-        return responseEntity.getBody();
+        HttpGet get = new HttpGet(apiUrl);
+
+        return this.sendGet(get, User.class);
     }
 
     @Override
     public User[] getFreelancers(Integer idUser) {
-        String endpoint = String.format("/user/%s", idUser);
+        String endpoint = String.format("/user/by-subcategories/%s", idUser);
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
                 .path(endpoint)
                 .toUriString();
 
-        ParameterizedTypeReference<ArrayList<User>> typeRef = new ParameterizedTypeReference<ArrayList<User>>(){};
+        HttpGet get = new HttpGet(apiUrl);
 
-        ResponseEntity<User[]> responseEntity = restTemplate.getForEntity(apiUrl, User[].class);
-        return responseEntity.getBody();
+        return this.sendGet(get, User[].class);
     }
 }
