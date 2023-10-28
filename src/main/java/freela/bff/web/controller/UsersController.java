@@ -6,6 +6,7 @@ import freela.bff.domain.model.request.user.UpdateUserRequest;
 import freela.bff.domain.model.response.core.ErrorResponse;
 import freela.bff.domain.model.response.user.AuthenticateUserResponse;
 import freela.bff.domain.model.response.user.CreateUserResponse;
+import freela.bff.domain.model.response.user.UserDetailsResponse;
 import freela.bff.domain.service.interfaces.IUsersService;
 import freela.bff.infra.configuration.jwt.JwtConfiguration;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +31,7 @@ public class UsersController extends BaseController {
 
     public UsersController(JwtConfiguration jwtConfiguration, IUsersService usersService) {
         super(jwtConfiguration);
-            this.usersService = usersService;
+        this.usersService = usersService;
     }
 
     @Operation(summary = "Cadastrar um novo usuário no sistema")
@@ -55,23 +56,21 @@ public class UsersController extends BaseController {
     @ApiResponse(responseCode = "401", description = "Unauthorized - Token invalido ou expirado",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @GetMapping
-    public ResponseEntity<User> getDetailsUser() {
-        var response = usersService.getDetailsUser(this.getUserClaims());
-        return ResponseEntity.ok(response);
+    public ResponseEntity<UserDetailsResponse> getDetailsUser() {
+        return ResponseEntity.ok(usersService.getDetailsUser(this.getUserClaims()));
     }
 
 
     @Operation(summary = "Buscar freelancers")
-    @ApiResponse(responseCode = "200", description = "",
+    @ApiResponse(responseCode = "200", description = "Sucesso - Lista de freelancers",
             content = @Content(schema = @Schema(implementation = CreateUserResponse.class)))
     @ApiResponse(responseCode = "400", description = "BadRequest - Parâmetros incorretos ou insuficientes",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @ApiResponse(responseCode = "401", description = "Unauthorized - Token invalido ou expirado",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @GetMapping("/freelancers")
-    public ResponseEntity<User[]> getFreelancers() {
-        var response = usersService.getFreelancers(this.getUserClaims());
-        return ResponseEntity.ok(response);
+    public ResponseEntity<UserDetailsResponse[]> getFreelancersUser() {
+        return ResponseEntity.ok(usersService.getFreelancersUser(this.getUserClaims()));
     }
 
     @Operation(summary = "Realizar a autenticação de um usuário no sistema")
@@ -93,18 +92,17 @@ public class UsersController extends BaseController {
     @ApiResponse(responseCode = "401", description = "Unauthorized - Token invalido ou expirado",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @PutMapping("/profile-photo")
-    public ResponseEntity<User> updateProfilePhotoUser(
-            Authentication authentication, @RequestParam("image") MultipartFile image) {
-        return ResponseEntity.ok(usersService.updateProfilePhotoUser(authentication, image));
+    public ResponseEntity<UserDetailsResponse> updateProfilePhotoUser(@RequestParam("image") MultipartFile image) {
+        return ResponseEntity.ok(usersService.updateProfilePhotoUser(this.getUserClaims(), image));
     }
 
     @Operation(summary = "Atualizar perfil do usuario")
-    @ApiResponse(responseCode = "200", description = "Perfil atualizado",
+    @ApiResponse(responseCode = "200", description = "Sucesso - Perfil atualizado",
             content = @Content(schema = @Schema(implementation = AuthenticateUserResponse.class)))
     @ApiResponse(responseCode = "401", description = "Unauthorized - Token invalido ou expirado",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    @PutMapping()
-    public ResponseEntity<User> updateUser(@RequestBody UpdateUserRequest request) {
+    @PatchMapping()
+    public ResponseEntity<UserDetailsResponse> updateUser(@RequestBody UpdateUserRequest request) {
         return ResponseEntity.ok(usersService.updateUser(this.getUserClaims(), request));
     }
 

@@ -3,6 +3,7 @@ package freela.bff.infra.repository;
 import freela.bff.domain.model.request.user.AuthenticateUserRequest;
 import freela.bff.domain.model.request.user.CreateUserRequest;
 import freela.bff.domain.model.request.user.UpdateUserRequest;
+import freela.bff.domain.model.response.categories.SubCategory;
 import freela.bff.domain.model.response.order.Order;
 import freela.bff.infra.repository.interfaces.IUsersRepository;
 import org.apache.http.NameValuePair;
@@ -61,7 +62,7 @@ public class UsersRepository extends BaseRepository implements IUsersRepository 
 
     @Override
     public User updateProfilePhotoUser(Integer idUser, MultipartFile image) {
-        String endpoint = String.format("/user/login/%s", idUser);
+        String endpoint = String.format("/user/photo/%s", idUser);
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
                 .path(endpoint)
                 .toUriString();
@@ -97,7 +98,7 @@ public class UsersRepository extends BaseRepository implements IUsersRepository 
     }
 
     @Override
-    public User[] getFreelancers(Integer idUser) {
+    public User[] getFreelancersUser(Integer idUser) {
         String endpoint = String.format("/user/by-subcategories/%s", idUser);
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
                 .path(endpoint)
@@ -106,5 +107,17 @@ public class UsersRepository extends BaseRepository implements IUsersRepository 
         HttpGet get = new HttpGet(apiUrl);
 
         return this.sendGet(get, User[].class);
+    }
+
+    @Override
+    public SubCategory[] getSubcategoriesUser(Integer idUser) {
+        String endpoint = String.format("/user/subcategories/%s", idUser);
+        String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
+                .path(endpoint)
+                .toUriString();
+
+        HttpGet get = new HttpGet(apiUrl);
+
+        return this.sendGet(get, SubCategory[].class);
     }
 }

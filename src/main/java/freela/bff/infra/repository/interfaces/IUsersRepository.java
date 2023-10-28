@@ -3,6 +3,7 @@ package freela.bff.infra.repository.interfaces;
 import freela.bff.domain.model.request.user.AuthenticateUserRequest;
 import freela.bff.domain.model.request.user.CreateUserRequest;
 import freela.bff.domain.model.request.user.UpdateUserRequest;
+import freela.bff.domain.model.response.categories.SubCategory;
 import freela.bff.domain.model.response.user.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,7 @@ public interface IUsersRepository {
     User updateProfilePhotoUser(Integer idUser, MultipartFile image);
     User getDetailsUser(Integer idUser);
     User updateUser(Integer idUser, UpdateUserRequest request);
-    User[] getFreelancers(Integer idUser);
+    User[] getFreelancersUser(Integer idUser);
+    SubCategory[] getSubcategoriesUser(Integer idUser);
 
 }

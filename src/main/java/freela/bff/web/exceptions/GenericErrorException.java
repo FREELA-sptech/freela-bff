@@ -1,13 +1,21 @@
 package freela.bff.web.exceptions;
 
-public class GenericErrorException {
-    private String message;
+import freela.bff.domain.model.response.core.ErrorResponse;
 
-    public GenericErrorException(String message) {
-        this.message = message;
+public class GenericErrorException extends RuntimeException {
+    private ErrorResponse errorResponse;
+    private int statusCode;
+
+    public GenericErrorException(ErrorResponse errorResponse, int statusCode) {
+        this.errorResponse = errorResponse;
+        this.statusCode = statusCode;
     }
 
-    public String getMessage() {
-        return message;
+    public ErrorResponse getErrorResponse() {
+        return errorResponse;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
     }
 }

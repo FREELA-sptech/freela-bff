@@ -3,6 +3,7 @@ package freela.bff.web.filter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import freela.bff.domain.model.response.core.ErrorResponse;
+import freela.bff.web.exceptions.GenericErrorException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,9 +30,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return modelAndView;
     }
 
-    @ExceptionHandler(HttpClientErrorException.class)
-    public ResponseEntity<ErrorResponse> handleHttpClientErrorException(HttpClientErrorException exception) throws JsonProcessingException {
-        return ResponseEntity.status(exception.getStatusCode()).body(objectMapper.readValue(exception.getResponseBodyAsString(), ErrorResponse.class));
+    @ExceptionHandler(GenericErrorException.class)
+    public ResponseEntity<ErrorResponse> handleGenericErrorException(GenericErrorException exception) throws JsonProcessingException {
+        return ResponseEntity.status(exception.getStatusCode()).body(exception.getErrorResponse());
     }
 
 }

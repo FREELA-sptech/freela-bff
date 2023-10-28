@@ -12,11 +12,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class UserDetailsResponse {
     private Integer id;
     private String name;
-    private String email;
-    private String password;
     private String photo;
     private String description;
     private String uf;
@@ -25,3 +23,5 @@ public class User {
     private Double rate;
     private List<SubCategory> subCategories;
 }
+
+

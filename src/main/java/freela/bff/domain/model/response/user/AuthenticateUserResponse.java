@@ -23,7 +23,7 @@ public class AuthenticateUserResponse extends RepresentationModel<AuthenticateUs
         this.token = token;
         this.isFreelancer = isFreelancer;
 
-        add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsersController.class).updateProfilePhotoUser(null, null))
+        add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsersController.class).updateProfilePhotoUser( null))
                 .withRel("updatedProfilePhoto"));
     }
 }

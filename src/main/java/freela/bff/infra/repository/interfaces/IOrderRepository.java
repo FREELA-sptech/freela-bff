@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface IOrderRepository {
     Order createOrder(CreateOrderRequest request);
-    Order[] getAll(List<Integer> subCategoriesIds, String orderType);
-    Order getById(Integer orderId);
+    Order[] getAllOrder(List<Integer> subCategoriesIds);
+    Order getByIdOrder(Integer orderId);
+    Order updateOrder(Integer orderId, CreateOrderRequest request);
+    Void deleteOrder(Integer orderId);
 }

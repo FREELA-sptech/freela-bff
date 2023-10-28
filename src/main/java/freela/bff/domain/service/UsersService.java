@@ -1,11 +1,13 @@
 package freela.bff.domain.service;
 
+import freela.bff.domain.model.mapper.user.UserDetailsMapper;
 import freela.bff.domain.model.request.user.AuthenticateUserRequest;
 import freela.bff.domain.model.request.user.CreateUserRequest;
 import freela.bff.domain.model.request.user.UpdateUserRequest;
 import freela.bff.domain.model.response.user.AuthenticateUserResponse;
 import freela.bff.domain.model.response.user.User;
 import freela.bff.domain.model.response.user.CreateUserResponse;
+import freela.bff.domain.model.response.user.UserDetailsResponse;
 import freela.bff.domain.service.interfaces.IUsersService;
 import freela.bff.infra.configuration.jwt.JwtConfiguration;
 import freela.bff.infra.configuration.jwt.UserClaims;
@@ -42,23 +44,22 @@ public class UsersService implements IUsersService {
     }
 
     @Override
-    public User updateProfilePhotoUser(Authentication authentication, MultipartFile image) {
-
-        return usersRepository.updateProfilePhotoUser(1, image);
+    public UserDetailsResponse updateProfilePhotoUser(UserClaims userClaims, MultipartFile image) {
+        return UserDetailsMapper.map(usersRepository.updateProfilePhotoUser(userClaims.getUserId(), image));
     }
 
     @Override
-    public User updateUser(UserClaims userClaims, UpdateUserRequest request) {
-        return usersRepository.updateUser(userClaims.getUserId(), request);
+    public UserDetailsResponse updateUser(UserClaims userClaims, UpdateUserRequest request) {
+        return UserDetailsMapper.map(usersRepository.updateUser(userClaims.getUserId(), request));
     }
 
     @Override
-    public User getDetailsUser(UserClaims userClaims) {
-        return usersRepository.getDetailsUser(userClaims.getUserId());
+    public UserDetailsResponse getDetailsUser(UserClaims userClaims) {
+        return UserDetailsMapper.map(usersRepository.getDetailsUser(userClaims.getUserId()));
     }
 
     @Override
-    public User[] getFreelancers(UserClaims userClaims) {
-        return usersRepository.getFreelancers(userClaims.getUserId());
+    public UserDetailsResponse[] getFreelancersUser(UserClaims userClaims) {
+        return UserDetailsMapper.mapper(usersRepository.getFreelancersUser(userClaims.getUserId()));
     }
 }
