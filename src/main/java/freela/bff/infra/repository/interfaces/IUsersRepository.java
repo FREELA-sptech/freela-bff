@@ -19,5 +19,5 @@ public interface IUsersRepository {
     User updateUser(Integer idUser, UpdateUserRequest request);
     User[] getFreelancersUser(Integer idUser);
     SubCategory[] getSubcategoriesUser(Integer idUser);
-
+    SubCategory[] getAllSubCategories();
 }

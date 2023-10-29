@@ -40,7 +40,8 @@ public class ApiConfiguration {
             new AntPathRequestMatcher("/actuator/*"),
             new AntPathRequestMatcher("/h2-console/**"),
             new AntPathRequestMatcher("/users/authenticate"),
-            new AntPathRequestMatcher("/users", "POST")
+            new AntPathRequestMatcher("/users", "POST"),
+            new AntPathRequestMatcher("/sub-categories")
     };
 
     @Bean

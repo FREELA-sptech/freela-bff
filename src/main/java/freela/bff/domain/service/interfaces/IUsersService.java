@@ -3,6 +3,7 @@ package freela.bff.domain.service.interfaces;
 import freela.bff.domain.model.request.user.AuthenticateUserRequest;
 import freela.bff.domain.model.request.user.CreateUserRequest;
 import freela.bff.domain.model.request.user.UpdateUserRequest;
+import freela.bff.domain.model.response.categories.SubCategory;
 import freela.bff.domain.model.response.user.AuthenticateUserResponse;
 import freela.bff.domain.model.response.user.User;
 import freela.bff.domain.model.response.user.CreateUserResponse;
@@ -22,4 +23,5 @@ public interface IUsersService {
     UserDetailsResponse updateUser(UserClaims userClaims, UpdateUserRequest request);
     UserDetailsResponse[] getFreelancersUser(UserClaims userClaims);
     UserDetailsResponse getDetailsUser(UserClaims userClaims);
+    SubCategory[] getAllSubCategories();
 }

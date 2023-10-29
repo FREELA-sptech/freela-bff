@@ -2,30 +2,20 @@ package freela.bff.infra.repository;
 
 import freela.bff.domain.model.request.order.CreateOrderRequest;
 import freela.bff.domain.model.response.order.Order;
-import freela.bff.domain.model.response.user.User;
-import freela.bff.infra.repository.interfaces.IOrderRepository;
-import org.apache.http.HttpEntity;
+import freela.bff.domain.model.response.order.OrderResponse;
+import freela.bff.infra.repository.interfaces.IOrdersRepository;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.google.gson.Gson;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestTemplate;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class OrderRepository extends BaseRepository implements IOrderRepository {
+public class OrdersRepository extends BaseRepository implements IOrdersRepository {
 
     private final String baseURL = "http://freela-order-service.duckdns.org/";
 
@@ -40,7 +30,7 @@ public class OrderRepository extends BaseRepository implements IOrderRepository 
         return this.sendPost(this.generateBody(post,request),Order.class);
     }
 
-    public Order[] getAllOrder(List<Integer> subCategoriesIds){
+    public OrderResponse[] getAllOrder(List<Integer> subCategoriesIds){
         String subCategories = String.join(",", subCategoriesIds.stream().map(Object::toString).collect(Collectors.toList()));
 
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
@@ -50,10 +40,10 @@ public class OrderRepository extends BaseRepository implements IOrderRepository 
 
         HttpGet get = new HttpGet(apiUrl);
 
-        return this.sendGet(get,Order[].class);
+        return this.sendGet(get, OrderResponse[].class);
     }
 
-    public Order getByIdOrder(Integer orderId){
+    public OrderResponse getByIdOrder(Integer orderId){
         String endpoint = "/order/" + orderId;
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
                 .path(endpoint)
@@ -61,7 +51,7 @@ public class OrderRepository extends BaseRepository implements IOrderRepository 
 
         HttpGet get = new HttpGet(apiUrl);
 
-        return this.sendGet(get,Order.class);
+        return this.sendGet(get, OrderResponse.class);
     }
 
     @Override

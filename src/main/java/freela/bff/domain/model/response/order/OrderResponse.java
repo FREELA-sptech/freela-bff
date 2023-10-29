@@ -15,14 +15,15 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order {
+public class OrderResponse {
     private Integer id;
     private String description;
     private String title;
     private Double value;
     private String deadline;
     private Integer userId;
-    @OneToOne
     private Proposal proposalAccepted;
     private EStatus status;
+    private List<Proposal> proposals;
+    private List<SubCategory> subCategories;
 }

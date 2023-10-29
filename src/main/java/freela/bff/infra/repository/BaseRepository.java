@@ -148,6 +148,15 @@ public class BaseRepository {
         return post;
     }
 
+    public HttpPut generateBody(HttpPut put, Object objeto){
+        String json = this.convertObjectToJson(objeto);
+        HttpEntity entity = new StringEntity(json,"UTF-8");
+        put.setHeader("Content-Type", "application/json");
+        put.setEntity(entity);
+
+        return put;
+    }
+
     public String convertObjectToJson(Object object) {
         try {
             Gson gson = new Gson();

@@ -4,8 +4,9 @@ import freela.bff.domain.model.request.order.CreateOrderRequest;
 import freela.bff.domain.model.response.core.ErrorResponse;
 import freela.bff.domain.model.response.order.CreateOrderResponse;
 import freela.bff.domain.model.response.order.Order;
+import freela.bff.domain.model.response.order.OrderResponse;
 import freela.bff.domain.model.response.user.CreateUserResponse;
-import freela.bff.domain.service.OrderService;
+import freela.bff.domain.service.OrdersService;
 import freela.bff.infra.configuration.jwt.JwtConfiguration;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,17 +18,16 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 @RestController
-@RequestMapping("/order")
-public class OrderController extends BaseController {
+@RequestMapping("/orders")
+public class OrdersController extends BaseController {
 
-    private final OrderService orderService;
+    private final OrdersService ordersService;
 
-    public OrderController(JwtConfiguration jwtConfiguration, OrderService orderService) {
+    public OrdersController(JwtConfiguration jwtConfiguration, OrdersService ordersService) {
         super(jwtConfiguration);
-        this.orderService = orderService;
+        this.ordersService = ordersService;
     }
 
     @Operation(summary = "Criar um novo pedido")
@@ -38,7 +38,7 @@ public class OrderController extends BaseController {
     @PostMapping
     public ResponseEntity<CreateOrderResponse> createOrder(
             @RequestBody @Valid CreateOrderRequest request) {
-        var response = orderService.createOrder(this.getUserClaims(), request);
+        var response = ordersService.createOrder(this.getUserClaims(), request);
         return ResponseEntity.created(URI.create("/order/" + response)).body(response);
     }
 
@@ -48,8 +48,8 @@ public class OrderController extends BaseController {
     @ApiResponse(responseCode = "400", description = "BadRequest - Parâmetros incorretos ou insuficientes",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @GetMapping
-    public ResponseEntity<Order[]> getAllOrder() {
-        return ResponseEntity.ok(orderService.getAllOrder(this.getUserClaims()));
+    public ResponseEntity<OrderResponse[]> getAllOrder() {
+        return ResponseEntity.ok(ordersService.getAllOrder(this.getUserClaims()));
 
     }
 
@@ -60,8 +60,8 @@ public class OrderController extends BaseController {
             @ApiResponse(responseCode = "200", description = "Detalhes da ordem.")
     })
     @GetMapping("{orderId}")
-    public ResponseEntity<Order> getByIdOrder(@PathVariable Integer orderId) {
-        return ResponseEntity.ok(orderService.getByIdOrder(orderId));
+    public ResponseEntity<OrderResponse> getByIdOrder(@PathVariable Integer orderId) {
+        return ResponseEntity.ok(ordersService.getByIdOrder(orderId));
     }
 
     @Operation(summary = "Editar um pedido")
@@ -72,7 +72,7 @@ public class OrderController extends BaseController {
     })
     @PatchMapping("{orderId}")
     public ResponseEntity<Order> updateOrder(@PathVariable Integer orderId, @RequestBody @Valid CreateOrderRequest request) {
-        return ResponseEntity.ok(orderService.updateOrder(orderId, request));
+        return ResponseEntity.ok(ordersService.updateOrder(orderId, request));
     }
 
     @Operation(summary = "Deletar um pedido")
@@ -83,7 +83,7 @@ public class OrderController extends BaseController {
     })
     @DeleteMapping("{orderId}")
     public ResponseEntity<Void> updateOrder(@PathVariable Integer orderId) {
-        orderService.deleteOrder(orderId);
+        ordersService.deleteOrder(orderId);
         return ResponseEntity.ok().build();
     }
 }

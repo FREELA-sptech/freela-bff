@@ -120,4 +120,16 @@ public class UsersRepository extends BaseRepository implements IUsersRepository 
 
         return this.sendGet(get, SubCategory[].class);
     }
+
+    @Override
+    public SubCategory[] getAllSubCategories() {
+        String endpoint = "/sub-categories";
+        String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
+                .path(endpoint)
+                .toUriString();
+
+        HttpGet get = new HttpGet(apiUrl);
+
+        return this.sendGet(get, SubCategory[].class);
+    }
 }
