@@ -28,4 +28,5 @@ public class CreateUserRequest {
     private String city;
     private String uf;
     private Boolean isFreelancer;
+    private String devideId;
 }

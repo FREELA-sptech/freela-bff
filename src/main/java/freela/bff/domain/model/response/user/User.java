@@ -23,5 +23,6 @@ public class User {
     private String city;
     private Boolean isFreelancer;
     private Double rate;
+    private String devideId;
     private List<SubCategory> subCategories;
 }
