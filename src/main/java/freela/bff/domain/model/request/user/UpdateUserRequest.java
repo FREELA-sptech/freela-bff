@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Lob;
 import java.util.ArrayList;
 
 @Data
@@ -17,5 +18,7 @@ public class UpdateUserRequest {
     private String uf;
     private String description;
     private ArrayList<Integer> subCategoriesIds;
-    private String devideId;
+    private String deviceId;
+    @Lob
+    private byte[] photo;
 }

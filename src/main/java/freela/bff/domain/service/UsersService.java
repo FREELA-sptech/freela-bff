@@ -46,7 +46,15 @@ public class UsersService implements IUsersService {
 
     @Override
     public UserDetailsResponse updateProfilePhotoUser(UserClaims userClaims, MultipartFile image) {
-        return UserDetailsMapper.map(usersRepository.updateProfilePhotoUser(userClaims.getUserId(), image));
+        UpdateUserRequest request = new UpdateUserRequest();
+
+        try {
+            request.setPhoto(image.getBytes());
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+
+        return UserDetailsMapper.map(usersRepository.updateUser(userClaims.getUserId(), request));
     }
 
     @Override
