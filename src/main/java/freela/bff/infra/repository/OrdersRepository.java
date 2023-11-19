@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Repository
 public class OrdersRepository extends BaseRepository implements IOrdersRepository {
 
-    private final String baseURL = "http://freela-order-service.duckdns.org/";
+    private final String baseURL = "http://localhost:9090/";
 
     public Order createOrder(CreateOrderRequest request){
         String endpoint = "/order";
@@ -80,5 +80,18 @@ public class OrdersRepository extends BaseRepository implements IOrdersRepositor
         this.sendDelete(delete, Boolean.class);
 
         return null;
+    }
+
+    @Override
+    public OrderResponse[] getAllOrderByUser(Integer userId) {
+        String endpoint = String.format("/order/user/%s", userId);
+
+        String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
+                .path(endpoint)
+                .toUriString();
+
+        HttpGet get = new HttpGet(apiUrl);
+
+        return this.sendGet(get, OrderResponse[].class);
     }
 }

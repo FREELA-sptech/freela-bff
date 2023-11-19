@@ -41,7 +41,7 @@ public class UsersService implements IUsersService {
     public AuthenticateUserResponse authenticateUser(AuthenticateUserRequest authenticateUserRequest) {
         User user = usersRepository.authenticateUser(authenticateUserRequest);
 
-        return new AuthenticateUserResponse(jwtConfiguration.generateJwtToken(user), user.getIsFreelancer());
+        return new AuthenticateUserResponse(jwtConfiguration.generateJwtToken(user), user.getIsFreelancer(), user.getId());
     }
 
     @Override

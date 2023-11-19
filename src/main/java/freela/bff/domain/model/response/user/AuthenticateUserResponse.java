@@ -18,10 +18,12 @@ import java.io.IOException;
 public class AuthenticateUserResponse extends RepresentationModel<AuthenticateUserResponse> {
     private String token;
     private boolean isFreelancer;
+    private Integer userId;
 
-    public AuthenticateUserResponse(String token, boolean isFreelancer) {
+    public AuthenticateUserResponse(String token, boolean isFreelancer, Integer userId) {
         this.token = token;
         this.isFreelancer = isFreelancer;
+        this.userId = userId;
 
         add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsersController.class).updateProfilePhotoUser( null))
                 .withRel("updatedProfilePhoto"));

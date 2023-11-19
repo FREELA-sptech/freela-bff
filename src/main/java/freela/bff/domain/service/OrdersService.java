@@ -1,10 +1,12 @@
 package freela.bff.domain.service;
 
+import freela.bff.domain.model.mapper.user.UserDetailsMapper;
 import freela.bff.domain.model.request.order.CreateOrderRequest;
 import freela.bff.domain.model.response.categories.SubCategory;
 import freela.bff.domain.model.response.order.CreateOrderResponse;
 import freela.bff.domain.model.response.order.Order;
 import freela.bff.domain.model.response.order.OrderResponse;
+import freela.bff.domain.model.response.user.User;
 import freela.bff.domain.service.interfaces.IOrdersService;
 import freela.bff.infra.configuration.jwt.UserClaims;
 import freela.bff.infra.repository.OrdersRepository;
@@ -43,7 +45,9 @@ public class OrdersService implements IOrdersService {
 
 
     public OrderResponse getByIdOrder(Integer orderId){
-        return orderRepository.getByIdOrder(orderId);
+        OrderResponse order = orderRepository.getByIdOrder(orderId);
+
+        return order;
     }
 
     @Override
@@ -54,5 +58,10 @@ public class OrdersService implements IOrdersService {
     @Override
     public Void deleteOrder(Integer orderId) {
         return orderRepository.deleteOrder(orderId);
+    }
+
+    @Override
+    public OrderResponse[] getAllOrderByUser(UserClaims userClaims) {
+        return orderRepository.getAllOrderByUser(userClaims.getUserId());
     }
 }

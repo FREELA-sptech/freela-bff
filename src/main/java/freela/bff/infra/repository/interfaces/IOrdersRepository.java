@@ -12,4 +12,5 @@ public interface IOrdersRepository {
     OrderResponse getByIdOrder(Integer orderId);
     Order updateOrder(Integer orderId, CreateOrderRequest request);
     Void deleteOrder(Integer orderId);
+    OrderResponse[] getAllOrderByUser(Integer userId);
 }

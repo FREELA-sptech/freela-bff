@@ -4,6 +4,7 @@ import freela.bff.domain.model.enums.EStatus;
 import freela.bff.domain.model.response.core.ErrorResponse;
 import freela.bff.domain.model.request.proposal.CreateProposalRequest;
 import freela.bff.domain.model.response.proposal.Proposal;
+import freela.bff.domain.model.response.proposal.ProposalResponse;
 import freela.bff.domain.model.response.user.CreateUserResponse;
 import freela.bff.domain.service.ProposalsService;
 import freela.bff.infra.configuration.jwt.JwtConfiguration;
@@ -36,7 +37,7 @@ public class ProposalsController extends BaseController {
     @ApiResponse(responseCode = "400", description = "BadRequest - Parâmetros incorretos ou insuficientes",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @PostMapping("/{orderId}")
-    public ResponseEntity<Proposal> createProposal(
+    public ResponseEntity<ProposalResponse> createProposal(
             @PathVariable @NotNull int orderId,
             @RequestBody CreateProposalRequest request
     ){
@@ -49,7 +50,7 @@ public class ProposalsController extends BaseController {
     @ApiResponse(responseCode = "400", description = "BadRequest - Parâmetros incorretos ou insuficientes",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @GetMapping("/user")
-    public ResponseEntity<Proposal[]> findProposalsByUserid() {
+    public ResponseEntity<ProposalResponse[]> findProposalsByUserid() {
         return ResponseEntity.ok(proposalsService.findProposalsByUserId(this.getUserClaims()));
     }
 
@@ -60,7 +61,7 @@ public class ProposalsController extends BaseController {
             @ApiResponse(responseCode = "200", description = "Proposta ediada.")
     })
     @PatchMapping("/{proposalId}")
-    public ResponseEntity<Proposal> updateProposal(@PathVariable Integer proposalId, @RequestBody @Valid CreateProposalRequest request) {
+    public ResponseEntity<ProposalResponse> updateProposal(@PathVariable Integer proposalId, @RequestBody @Valid CreateProposalRequest request) {
         return ResponseEntity.ok(proposalsService.updateProposal(proposalId, request));
     }
 

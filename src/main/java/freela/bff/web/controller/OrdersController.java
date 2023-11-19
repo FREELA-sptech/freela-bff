@@ -50,7 +50,6 @@ public class OrdersController extends BaseController {
     @GetMapping
     public ResponseEntity<OrderResponse[]> getAllOrder() {
         return ResponseEntity.ok(ordersService.getAllOrder(this.getUserClaims()));
-
     }
 
     @Operation(summary = "Buscar detalhes de um pedido")
@@ -85,5 +84,15 @@ public class OrdersController extends BaseController {
     public ResponseEntity<Void> updateOrder(@PathVariable Integer orderId) {
         ordersService.deleteOrder(orderId);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Listar pedidos do usuario")
+    @ApiResponse(responseCode = "200", description = "Sucesso - Lista de pedidos",
+            content = @Content(schema = @Schema(implementation = CreateUserResponse[].class)))
+    @ApiResponse(responseCode = "400", description = "BadRequest - Parâmetros incorretos ou insuficientes",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    @GetMapping("user")
+    public ResponseEntity<OrderResponse[]> getAllOrderByUser() {
+        return ResponseEntity.ok(ordersService.getAllOrderByUser(this.getUserClaims()));
     }
 }

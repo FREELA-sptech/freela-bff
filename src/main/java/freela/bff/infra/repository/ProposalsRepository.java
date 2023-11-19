@@ -3,6 +3,7 @@ package freela.bff.infra.repository;
 import freela.bff.domain.model.enums.EStatus;
 import freela.bff.domain.model.request.proposal.CreateProposalRequest;
 import freela.bff.domain.model.response.proposal.Proposal;
+import freela.bff.domain.model.response.proposal.ProposalResponse;
 import freela.bff.infra.repository.interfaces.IProposalsRepository;
 import org.apache.http.client.methods.*;
 import org.springframework.stereotype.Repository;
@@ -11,9 +12,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Repository
 public class ProposalsRepository extends BaseRepository  implements IProposalsRepository {
 
-    private final String baseURL = "http://freela-order-service.duckdns.org/";
+    private final String baseURL = "http://localhost:9090/";
 
-    public Proposal createProposal(Integer userId, CreateProposalRequest createProposalRequest, Integer orderId){
+    public ProposalResponse createProposal(Integer userId, CreateProposalRequest createProposalRequest, Integer orderId){
         String endpoint = "/proposal/" + orderId + "/" + userId;
 
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
@@ -22,7 +23,7 @@ public class ProposalsRepository extends BaseRepository  implements IProposalsRe
 
         HttpPost post = new HttpPost(apiUrl);
 
-        return this.sendPost(this.generateBody(post,createProposalRequest),Proposal.class);
+        return this.sendPost(this.generateBody(post,createProposalRequest),ProposalResponse.class);
     }
 
     public Proposal findProposalsByOrder(Integer orderId){
@@ -36,7 +37,7 @@ public class ProposalsRepository extends BaseRepository  implements IProposalsRe
         return this.sendGet(get,Proposal.class);
     }
 
-    public Proposal[] findProposalsByUserId(Integer userId){
+    public ProposalResponse[] findProposalsByUserId(Integer userId){
         String endpoint = "/proposal/user/" + userId;
 
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
@@ -45,11 +46,11 @@ public class ProposalsRepository extends BaseRepository  implements IProposalsRe
 
         HttpGet get = new HttpGet(apiUrl);
 
-        return this.sendGet(get,Proposal[].class);
+        return this.sendGet(get, ProposalResponse[].class);
     }
 
     @Override
-    public Proposal updateProposal(Integer proposalId, CreateProposalRequest request) {
+    public ProposalResponse updateProposal(Integer proposalId, CreateProposalRequest request) {
         String endpoint = String.format("/proposal/%s", proposalId);
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
                 .path(endpoint)
@@ -58,7 +59,7 @@ public class ProposalsRepository extends BaseRepository  implements IProposalsRe
 
         HttpPut put = new HttpPut(apiUrl);
 
-        return this.sendPut(this.generateBody(put, request), Proposal.class);
+        return this.sendPut(this.generateBody(put, request), ProposalResponse.class);
     }
 
     @Override
