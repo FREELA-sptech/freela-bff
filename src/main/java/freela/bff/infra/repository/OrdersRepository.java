@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Repository
 public class OrdersRepository extends BaseRepository implements IOrdersRepository {
 
-    private final String baseURL = "http://localhost:9090/";
+    private final String baseURL = "http://freela-order-service.duckdns.org";
 
     public Order createOrder(CreateOrderRequest request, List<MultipartFile> photos){
         String endpoint = "/order";
