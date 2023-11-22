@@ -1,5 +1,7 @@
 package freela.bff.web.controller;
 
+import com.google.gson.Gson;
+import freela.bff.domain.model.request.order.CreateOrderBFFRequest;
 import freela.bff.domain.model.request.order.CreateOrderRequest;
 import freela.bff.domain.model.response.core.ErrorResponse;
 import freela.bff.domain.model.response.order.CreateOrderResponse;
@@ -15,9 +17,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/orders")
@@ -37,8 +41,14 @@ public class OrdersController extends BaseController {
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @PostMapping
     public ResponseEntity<CreateOrderResponse> createOrder(
-            @RequestBody @Valid CreateOrderRequest request) {
-        var response = ordersService.createOrder(this.getUserClaims(), request);
+            String createOrderRequest,
+            ArrayList<MultipartFile> photos
+    ) {
+        Gson gson = new Gson();
+
+        CreateOrderRequest request = gson.fromJson(createOrderRequest, CreateOrderRequest.class);
+
+        var response = ordersService.createOrder(this.getUserClaims(), request, photos);
         return ResponseEntity.created(URI.create("/order/" + response)).body(response);
     }
 

@@ -12,7 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Repository
 public class ProposalsRepository extends BaseRepository  implements IProposalsRepository {
 
-    private final String baseURL = "http://freela-order-service.duckdns.org/";
+    private final String baseURL = "http://localhost:9090/";
 
     public ProposalResponse createProposal(Integer userId, CreateProposalRequest createProposalRequest, Integer orderId){
         String endpoint = "/proposal/" + orderId + "/" + userId;

@@ -1,5 +1,6 @@
 package freela.bff.infra.repository;
 
+import freela.bff.domain.model.request.order.CreateOrderBFFRequest;
 import freela.bff.domain.model.request.order.CreateOrderRequest;
 import freela.bff.domain.model.response.order.Order;
 import freela.bff.domain.model.response.order.OrderResponse;
@@ -9,17 +10,19 @@ import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.springframework.stereotype.Repository;
 import org.apache.http.client.methods.HttpGet;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
 public class OrdersRepository extends BaseRepository implements IOrdersRepository {
 
-    private final String baseURL = "http://freela-order-service.duckdns.org/";
+    private final String baseURL = "http://localhost:9090/";
 
-    public Order createOrder(CreateOrderRequest request){
+    public Order createOrder(CreateOrderRequest request, List<MultipartFile> photos){
         String endpoint = "/order";
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
                 .path(endpoint)
@@ -27,7 +30,12 @@ public class OrdersRepository extends BaseRepository implements IOrdersRepositor
 
         HttpPost post = new HttpPost(apiUrl);
 
-        return this.sendPost(this.generateBody(post,request),Order.class);
+        try {
+            return this.sendPost(this.generateMultipartBody(post,request, photos),Order.class);
+        } catch (IOException ex) {
+
+        }
+        return null;
     }
 
     public OrderResponse[] getAllOrder(List<Integer> subCategoriesIds){

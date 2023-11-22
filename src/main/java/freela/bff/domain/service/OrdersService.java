@@ -1,6 +1,8 @@
 package freela.bff.domain.service;
 
+import com.google.gson.Gson;
 import freela.bff.domain.model.mapper.user.UserDetailsMapper;
+import freela.bff.domain.model.request.order.CreateOrderBFFRequest;
 import freela.bff.domain.model.request.order.CreateOrderRequest;
 import freela.bff.domain.model.response.categories.SubCategory;
 import freela.bff.domain.model.response.order.CreateOrderResponse;
@@ -13,6 +15,7 @@ import freela.bff.infra.repository.OrdersRepository;
 import freela.bff.infra.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,9 +30,9 @@ public class OrdersService implements IOrdersService {
     @Autowired
     private UsersRepository usersRepository;
 
-    public CreateOrderResponse createOrder(UserClaims userClaims, CreateOrderRequest request){
+    public CreateOrderResponse createOrder(UserClaims userClaims, CreateOrderRequest request, List<MultipartFile> photos){
         request.setUserId(userClaims.getUserId());
-        Order order = orderRepository.createOrder(request);
+        Order order = orderRepository.createOrder(request, photos);
         return new CreateOrderResponse();
     }
 

@@ -1,17 +1,26 @@
 package freela.bff.infra.repository;
 
 import com.google.gson.Gson;
+import freela.bff.domain.model.request.order.CreateOrderBFFRequest;
+import freela.bff.domain.model.request.order.CreateOrderRequest;
 import freela.bff.domain.model.response.core.ErrorResponse;
 import freela.bff.web.exceptions.GenericErrorException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseRepository {
     private final HttpClient client;
@@ -134,6 +143,25 @@ public class BaseRepository {
         String json = this.convertObjectToJson(objeto);
         HttpEntity entity = new StringEntity(json,"UTF-8");
         post.setHeader("Content-Type", "application/json");
+        post.setEntity(entity);
+
+        return post;
+    }
+
+    public HttpPost generateMultipartBody(HttpPost post, CreateOrderRequest request, List<MultipartFile> photos) throws IOException {
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+        // Adicione o JSON ao corpo da requisição
+        String json = this.convertObjectToJson(request);
+        builder.addTextBody("createOrderRequest", json, ContentType.APPLICATION_JSON);
+
+        // Adicione as fotos ao corpo da requisição
+        for (int i = 0; i < photos.size(); i++) {
+            builder.addBinaryBody("photos", photos.get(i).getBytes(), ContentType.MULTIPART_FORM_DATA, "photo" + i + ".jpg");
+        }
+
+        HttpEntity entity = builder.build();
+
         post.setEntity(entity);
 
         return post;
