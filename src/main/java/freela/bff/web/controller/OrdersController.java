@@ -3,6 +3,7 @@ package freela.bff.web.controller;
 import com.google.gson.Gson;
 import freela.bff.domain.model.request.order.CreateOrderBFFRequest;
 import freela.bff.domain.model.request.order.CreateOrderRequest;
+import freela.bff.domain.model.request.order.UpdateOrderRequest;
 import freela.bff.domain.model.response.core.ErrorResponse;
 import freela.bff.domain.model.response.order.CreateOrderResponse;
 import freela.bff.domain.model.response.order.Order;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -54,7 +56,7 @@ public class OrdersController extends BaseController {
 
     @Operation(summary = "Listar pedidos por subcategorias do usuario")
     @ApiResponse(responseCode = "200", description = "Sucesso - Lista de pedidos",
-            content = @Content(schema = @Schema(implementation = CreateUserResponse[].class)))
+            content = @Content(schema = @Schema(implementation = OrderResponse[].class)))
     @ApiResponse(responseCode = "400", description = "BadRequest - Parâmetros incorretos ou insuficientes",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     @GetMapping
@@ -80,8 +82,16 @@ public class OrdersController extends BaseController {
             @ApiResponse(responseCode = "200", description = "Detalhes da ordem.")
     })
     @PatchMapping("{orderId}")
-    public ResponseEntity<Order> updateOrder(@PathVariable Integer orderId, @RequestBody @Valid CreateOrderRequest request) {
-        return ResponseEntity.ok(ordersService.updateOrder(orderId, request));
+    public ResponseEntity<OrderResponse> updateOrder(
+            String updateOrderRequest,
+            ArrayList<MultipartFile> newPhotos,
+            @PathVariable Integer orderId
+    ) {
+        Gson gson = new Gson();
+
+        UpdateOrderRequest request = gson.fromJson(updateOrderRequest, UpdateOrderRequest.class);
+
+        return ResponseEntity.ok(ordersService.updateOrder(orderId, request, newPhotos));
     }
 
     @Operation(summary = "Deletar um pedido")

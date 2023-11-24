@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import freela.bff.domain.model.mapper.user.UserDetailsMapper;
 import freela.bff.domain.model.request.order.CreateOrderBFFRequest;
 import freela.bff.domain.model.request.order.CreateOrderRequest;
+import freela.bff.domain.model.request.order.UpdateOrderRequest;
 import freela.bff.domain.model.response.categories.SubCategory;
 import freela.bff.domain.model.response.order.CreateOrderResponse;
 import freela.bff.domain.model.response.order.Order;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,8 +56,8 @@ public class OrdersService implements IOrdersService {
     }
 
     @Override
-    public Order updateOrder(Integer orderId, CreateOrderRequest request) {
-        return orderRepository.updateOrder(orderId, request);
+    public OrderResponse updateOrder(Integer orderId, UpdateOrderRequest updateOrderRequest, ArrayList<MultipartFile> newPhotos) {
+        return orderRepository.updateOrder(orderId, updateOrderRequest, newPhotos);
     }
 
     @Override

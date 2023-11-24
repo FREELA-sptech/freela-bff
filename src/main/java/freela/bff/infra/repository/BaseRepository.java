@@ -3,6 +3,7 @@ package freela.bff.infra.repository;
 import com.google.gson.Gson;
 import freela.bff.domain.model.request.order.CreateOrderBFFRequest;
 import freela.bff.domain.model.request.order.CreateOrderRequest;
+import freela.bff.domain.model.request.order.UpdateOrderRequest;
 import freela.bff.domain.model.response.core.ErrorResponse;
 import freela.bff.web.exceptions.GenericErrorException;
 import org.apache.http.HttpEntity;
@@ -151,13 +152,32 @@ public class BaseRepository {
     public HttpPost generateMultipartBody(HttpPost post, CreateOrderRequest request, List<MultipartFile> photos) throws IOException {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
-        // Adicione o JSON ao corpo da requisição
         String json = this.convertObjectToJson(request);
         builder.addTextBody("createOrderRequest", json, ContentType.APPLICATION_JSON);
 
-        // Adicione as fotos ao corpo da requisição
-        for (int i = 0; i < photos.size(); i++) {
-            builder.addBinaryBody("photos", photos.get(i).getBytes(), ContentType.MULTIPART_FORM_DATA, "photo" + i + ".jpg");
+        if (photos != null) {
+            for (int i = 0; i < photos.size(); i++) {
+                builder.addBinaryBody("photos", photos.get(i).getBytes(), ContentType.MULTIPART_FORM_DATA, "photo" + i + ".jpg");
+            }
+        }
+
+        HttpEntity entity = builder.build();
+
+        post.setEntity(entity);
+
+        return post;
+    }
+
+    public HttpPatch generateMultipartBodyUpdateOrder(HttpPatch post, UpdateOrderRequest request, List<MultipartFile> newPhotos) throws IOException {
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+        String json = this.convertObjectToJson(request);
+        builder.addTextBody("updateOrderRequest", json, ContentType.APPLICATION_JSON);
+
+        if (newPhotos != null) {
+            for (int i = 0; i < newPhotos.size(); i++) {
+                builder.addBinaryBody("newPhotos", newPhotos.get(i).getBytes(), ContentType.MULTIPART_FORM_DATA, "photo" + i + ".jpg");
+            }
         }
 
         HttpEntity entity = builder.build();

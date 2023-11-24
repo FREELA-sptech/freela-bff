@@ -2,6 +2,7 @@ package freela.bff.infra.repository;
 
 import freela.bff.domain.model.request.order.CreateOrderBFFRequest;
 import freela.bff.domain.model.request.order.CreateOrderRequest;
+import freela.bff.domain.model.request.order.UpdateOrderRequest;
 import freela.bff.domain.model.response.order.Order;
 import freela.bff.domain.model.response.order.OrderResponse;
 import freela.bff.infra.repository.interfaces.IOrdersRepository;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +33,7 @@ public class OrdersRepository extends BaseRepository implements IOrdersRepositor
         HttpPost post = new HttpPost(apiUrl);
 
         try {
-            return this.sendPost(this.generateMultipartBody(post,request, photos),Order.class);
+            return this.sendPost(this.generateMultipartBody(post, request, photos),Order.class);
         } catch (IOException ex) {
 
         }
@@ -63,7 +65,7 @@ public class OrdersRepository extends BaseRepository implements IOrdersRepositor
     }
 
     @Override
-    public Order updateOrder(Integer orderId, CreateOrderRequest request) {
+    public OrderResponse updateOrder(Integer orderId, UpdateOrderRequest updateOrderRequest, ArrayList<MultipartFile> newPhotos) {
         String endpoint = String.format("/order/%s", orderId);
         String apiUrl = UriComponentsBuilder.fromUriString(baseURL)
                 .path(endpoint)
@@ -72,7 +74,12 @@ public class OrdersRepository extends BaseRepository implements IOrdersRepositor
 
         HttpPatch patch = new HttpPatch(apiUrl);
 
-        return this.sendPatch(this.generateBody(patch, request), Order.class);
+        try {
+            return this.sendPatch(this.generateMultipartBodyUpdateOrder(patch, updateOrderRequest, newPhotos), OrderResponse.class);
+        } catch (IOException ex) {
+
+        }
+        return null;
     }
 
     @Override
