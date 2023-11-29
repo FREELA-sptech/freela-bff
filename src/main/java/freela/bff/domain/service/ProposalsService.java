@@ -1,11 +1,13 @@
 package freela.bff.domain.service;
 
 import freela.bff.domain.model.enums.EStatus;
+import freela.bff.domain.model.request.chat.CreateChatRequest;
 import freela.bff.domain.model.request.proposal.CreateProposalRequest;
 import freela.bff.domain.model.response.proposal.Proposal;
 import freela.bff.domain.model.response.proposal.ProposalResponse;
 import freela.bff.domain.service.interfaces.IProposalsService;
 import freela.bff.infra.configuration.jwt.UserClaims;
+import freela.bff.infra.repository.ChatRepository;
 import freela.bff.infra.repository.ProposalsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

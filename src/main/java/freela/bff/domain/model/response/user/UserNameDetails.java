@@ -15,4 +15,10 @@ public class UserNameDetails {
     private Integer id;
     private String name;
     private String photo;
+
+    public UserNameDetails(User user) {
+        this.id = user.getId();
+        this.name = user.getName();
+        this.photo = user.getPhoto();
+    }
 }
