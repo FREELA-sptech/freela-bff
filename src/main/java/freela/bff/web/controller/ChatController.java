@@ -4,6 +4,7 @@ import freela.bff.domain.model.request.chat.CreateChatRequest;
 import freela.bff.domain.model.response.chat.Chat;
 import freela.bff.domain.model.response.chat.ChatResponse;
 import freela.bff.domain.model.response.chat.Message;
+import freela.bff.domain.model.response.chat.MessageResponse;
 import freela.bff.domain.service.ChatService;
 import freela.bff.domain.service.OrdersService;
 import freela.bff.infra.configuration.jwt.JwtConfiguration;
@@ -40,7 +41,7 @@ public class ChatController extends BaseController {
     }
 
     @GetMapping("/messages/{chatId}")
-    public ResponseEntity<Message[]> getAllByChat(@PathVariable @NotNull Integer chatId){
-        return ResponseEntity.ok(this.chatRepository.getAllMessages(chatId));
+    public ResponseEntity<ArrayList<MessageResponse>> getAllByChat(@PathVariable @NotNull Integer chatId){
+        return ResponseEntity.ok(this.chatService.getAllMessages(chatId));
     }
 }

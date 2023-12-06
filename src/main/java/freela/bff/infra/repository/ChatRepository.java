@@ -17,7 +17,7 @@ import java.util.List;
 
 @Repository
 public class ChatRepository extends BaseRepository  implements IChatRepository {
-    private final String baseURL = "http://freela-chat-service.duckdns.org";
+    private final String baseURL = "https://freela-chat-service.duckdns.org";
 
     @Override
     public Chat createChat(CreateChatRequest chatRequest) {
