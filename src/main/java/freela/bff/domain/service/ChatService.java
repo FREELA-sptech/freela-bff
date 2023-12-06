@@ -2,8 +2,6 @@ package freela.bff.domain.service;
 
 import freela.bff.domain.model.response.chat.Chat;
 import freela.bff.domain.model.response.chat.ChatResponse;
-import freela.bff.domain.model.response.chat.Message;
-import freela.bff.domain.model.response.chat.MessageResponse;
 import freela.bff.domain.model.response.user.User;
 import freela.bff.domain.model.response.user.UserNameDetails;
 import freela.bff.domain.service.interfaces.IChatService;
@@ -35,25 +33,6 @@ public class ChatService implements IChatService {
             UserNameDetails freelancer = new UserNameDetails(this.usersRepository.getDetailsUser(chat.getFreelancerId()));
 
             response.add(new ChatResponse(chat.getId(), freelancer, user, chat.getLastUpdate()));
-        }
-
-        return response;
-    }
-
-    public ArrayList<MessageResponse> getAllMessages(Integer chatId) {
-        Message[] messages = this.chatRepository.getAllMessages(chatId);
-
-        ArrayList<MessageResponse> response = new ArrayList<>();
-
-        for (Message message : messages) {
-            Chat chat = message.getChat();
-
-            UserNameDetails user = new UserNameDetails(this.usersRepository.getDetailsUser(chat.getUserId()));
-            UserNameDetails freelancer = new UserNameDetails(this.usersRepository.getDetailsUser(chat.getFreelancerId()));
-
-            ChatResponse newChat = new ChatResponse(chat.getId(), freelancer, user, chat.getLastUpdate());
-
-            response.add(new MessageResponse(message.getId(), message.getUserIdFrom(), message.getMessage(), message.getTime(), newChat));
         }
 
         return response;
